@@ -19,6 +19,7 @@ on:
     secrets:
       token:
         required: true
+        description: Token used to authenticate reviewdog against GitHub
 
 jobs:
 
@@ -51,19 +52,19 @@ jobs:
       - name: Install Dependencies
         if: ${{ matrix.package != '' }}
         run: |
-          cd $(mktemp -d)
+          cd "$(mktemp -d)"
           go install ${{ matrix.package }}
 
       - name: ${{ matrix.tool }} ${{ matrix.options }}
         shell: bash
         run: >
           ${{ matrix.tool }} ${{ matrix.options }} -w
-          $(find .
+          "$(find .
           -path './vendor' -prune
           -o -path './third_party' -prune
           -o -name '*.pb.go' -prune
           -o -name 'wire_gen.go' -prune
-          -o -type f -name '*.go' -print)
+          -o -type f -name '*.go' -print)"
 
       - name: Verify ${{ matrix.tool }}
         shell: bash
@@ -113,7 +114,7 @@ jobs:
           WOKE_VERSION: v0.13.0
         run: |
           TEMP_PATH="$(mktemp -d)"
-          cd $TEMP_PATH
+          cd "$TEMP_PATH"
 
           echo '::group::🐶 Installing reviewdog ... https://github.com/reviewdog/reviewdog'
           curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b "${TEMP_PATH}" 2>&1
@@ -330,7 +331,7 @@ jobs:
       - name: Install Tools
         run: |
           TEMP_PATH="$(mktemp -d)"
-          cd $TEMP_PATH
+          cd "$TEMP_PATH"
 
           echo '::group::🐶 Installing reviewdog ... https://github.com/reviewdog/reviewdog'
           curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b "${TEMP_PATH}" 2>&1
