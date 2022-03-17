@@ -128,7 +128,7 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/get-woke/woke/main/install.sh | sh -s -- -b "${TEMP_PATH}" "${WOKE_VERSION}" 2>&1
           echo '::endgroup::'
 
-          echo "${TEMP_PATH}" >> $GITHUB_PATH
+          echo "${TEMP_PATH}" >> "$GITHUB_PATH"
 
       - name: misspell
         shell: bash
@@ -341,7 +341,7 @@ jobs:
           go install github.com/mattmoor/boilerplate-check/cmd/boilerplate-check@latest
           echo '::endgroup::'
 
-          echo "${TEMP_PATH}" >> $GITHUB_PATH
+          echo "${TEMP_PATH}" >> "$GITHUB_PATH"
 
       - id: boilerplate_txt
         uses: andstor/file-existence-action@v1
