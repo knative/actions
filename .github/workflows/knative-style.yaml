@@ -77,7 +77,7 @@ jobs:
           }
           if [[ $(git diff-index --name-only HEAD --) ]]; then
               for x in $(git diff-index --name-only HEAD --); do
-                echo "::error file=$x::Please run ${{ matrix.tool }} ${{ matrix.options }}.%0A$(git diff $x | urlencode)"
+                echo "::error file=$x::Please run ${{ matrix.tool }} ${{ matrix.options }}.%0A$(git diff "$x" | urlencode)"
               done
               echo "${{ github.repository }} is out of style. Please run ${{ matrix.tool }} ${{ matrix.options }}."
               exit 1
@@ -218,10 +218,10 @@ jobs:
 
           for x in $LINT_FILES; do
             # Based on https://stackoverflow.com/questions/34943632/linux-check-if-there-is-an-empty-line-at-the-end-of-a-file
-            if [[ -f $x && ! ( -s "$x" && -z "$(tail -c 1 $x)" ) ]]; then
+            if [[ -f $x && ! ( -s "$x" && -z "$(tail -c 1 "$x")" ) ]]; then
               # We add 1 to `wc -l` here because of this limitation (from the man page):
               # Characters beyond the final <newline> character will not be included in the line count.
-              echo $x:$((1 + $(wc -l $x | tr -s ' ' | cut -d' ' -f 1))): Missing newline
+              echo "$x:$((1 + $(wc -l "$x" | tr -s ' ' | cut -d' ' -f 1))): Missing newline"
             fi
           done |
           reviewdog -efm="%f:%l: %m" \
@@ -289,7 +289,7 @@ jobs:
           echo '::group:: Running DO NOT SUBMIT with reviewdog 🐶 ...'
           # Don't fail because of grep
           set +o pipefail
-          find . -type f -not -path './vendor/*' -not -path './third_party/*' -not -path './.git/*' -not -path './.github/workflows/*' |
+          find . -print0 -type f -not -path './vendor/*' -not -path './third_party/*' -not -path './.git/*' -not -path './.github/workflows/*' |
           xargs grep -n "DO NOT SUBMIT" |
           reviewdog -efm="%f:%l:%m" \
                 -name="DO NOT SUBMIT" \
