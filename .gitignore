@@ -1,0 +1,7 @@
+# Operating system temporary files
+.DS_Store
+
+# Editor/IDE specific settings
+.idea
+.vscode/
+*.iml
