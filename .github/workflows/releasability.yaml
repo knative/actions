@@ -26,6 +26,9 @@ on:
       slackChannel:
         type: string
         required: false
+    secrets:
+      SLACK_WEBHOOK:
+        required: true
 
 jobs:
   releasability:
