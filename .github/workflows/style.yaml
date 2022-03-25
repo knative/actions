@@ -15,11 +15,7 @@
 name: Code Style
 
 on:
-  workflow_call:
-    secrets:
-      token:
-        required: true
-        description: Token used to authenticate reviewdog against GitHub
+  workflow_call: {}
 
 jobs:
 
@@ -134,7 +130,7 @@ jobs:
         shell: bash
         if: ${{ always() }}
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.token }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           set -e
           cd "${GITHUB_WORKSPACE}" || exit 1
@@ -164,7 +160,7 @@ jobs:
         shell: bash
         if: ${{ always() }}
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.token }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           set -e
           cd "${GITHUB_WORKSPACE}" || exit 1
@@ -195,7 +191,7 @@ jobs:
         shell: bash
         if: ${{ always() }}
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.token }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           set -e
           cd "${GITHUB_WORKSPACE}" || exit 1
@@ -239,7 +235,7 @@ jobs:
         if: ${{ always() && github.event_name == 'pull_request' }}
         shell: bash
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.token }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           set -e
           cd "${GITHUB_WORKSPACE}" || exit 1
@@ -274,7 +270,7 @@ jobs:
       - name: Do Not Submit
         shell: bash
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.token }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           set -e
           cd "${GITHUB_WORKSPACE}" || exit 1
@@ -351,7 +347,7 @@ jobs:
         shell: bash
         if: ${{ steps.boilerplate_txt.outputs.files_exists == 'true' }}
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.token }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           set -e
           cd "${GITHUB_WORKSPACE}" || exit 1
