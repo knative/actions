@@ -28,13 +28,13 @@ jobs:
     steps:
 
       - name: Set up Go 1.17
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: 1.17.x
         id: go
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -67,4 +67,4 @@ jobs:
 
       - if: steps.codecov-enabled.outputs.files_exists == 'true'
         name: Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
