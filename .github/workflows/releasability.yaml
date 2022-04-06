@@ -19,13 +19,13 @@ on:
     inputs:
       releaseFamily:
         type: string
-        required: false
+        required: true
       moduleReleaseFamily:
         type: string
-        required: false
+        required: true
       slackChannel:
         type: string
-        required: false
+        required: true
     secrets:
       SLACK_WEBHOOK:
         required: true
@@ -35,27 +35,13 @@ jobs:
     name: Releasability
     runs-on: 'ubuntu-latest'
 
-    env:
-      #########################################
-      #   Update this section each release.   #
-      RELEASE: 'v1.3'
-      MODULE_RELEASE: 'v0.30'
-      SLACK_CHANNEL: 'release-1dot3'
-      #########################################
-
     steps:
       - name: Defaults
         run: |
-          # If manual trigger sent releaseFamily, moduleReleaseFamily and slackChannel, then override them
-          if [[ "${{ inputs.releaseFamily }}" != "" ]]; then
-            echo "RELEASE=${{ inputs.releaseFamily }}" >> $GITHUB_ENV
-          fi
-          if [[ "${{ inputs.moduleReleaseFamily }}" != "" ]]; then
-            echo "MODULE_RELEASE=${{ inputs.moduleReleaseFamily }}" >> $GITHUB_ENV
-          fi
-          if [[ "${{ inputs.slackChannel }}" != "" ]]; then
-            echo "SLACK_CHANNEL=${{ inputs.slackChannel }}" >> $GITHUB_ENV
-          fi
+          echo "RELEASE=${{ inputs.releaseFamily }}" >> $GITHUB_ENV
+          echo "MODULE_RELEASE=${{ inputs.moduleReleaseFamily }}" >> $GITHUB_ENV
+          echo "SLACK_CHANNEL=${{ inputs.slackChannel }}" >> $GITHUB_ENV
+
           if [[ "${{ secrets.SLACK_WEBHOOK }}" != "" ]]; then
             echo "SLACK_WEBHOOK=exists" >> $GITHUB_ENV
           fi
