@@ -1,0 +1,73 @@
+name: 'go/downstream-test'
+description: 'Test Downstream Go Modules with Upstream Go Modules.'
+inputs:
+  upstream-module:
+    description: 'Upstream Module. For example, knative.dev/pkg'
+    required: true
+
+  upstream-path:
+    description: 'Path to upstream module - defaults to the module name'
+    required: false
+
+  downstream-module:
+    description: 'Downstream Module. For example, knative.dev/sample-controller'
+    required: true
+
+  downstream-path:
+    description: 'Path to the downstream module - defaults to the module name'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update Downstream, Replace Upstream with Local Upstream
+      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      shell: bash
+      run: |
+        go mod edit -replace ${{ inputs.upstream-module }}=$GITHUB_WORKSPACE/${{ inputs.upstream-path || inputs.upstream-module }}
+
+    - name: Downstream Update Deps
+      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      shell: bash
+      run: |
+        ./hack/update-deps.sh
+
+    - name:  Downstream Update Codegen
+      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      shell: bash
+      run: |
+        ./hack/update-codegen.sh
+
+    - name: Build
+      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      shell: bash
+      run: |
+        set +o pipefail # grep return code is 1 when no lines are found.
+        tags="$(grep -I  -r '// +build' . | \
+                grep -v '^./vendor/' | \
+                grep -v '^./hack/' | \
+                grep -v '^./third_party' | \
+                `# Drop directories with . prefix` \
+                grep -v '^./\.' | \
+                cut -f3 -d' ' | \
+                tr ',' '\n' | \
+                sort | uniq | \
+                grep -v '^!' | \
+                `# Don't pass any of the built-in GOOS tags` \
+                grep -vE '(windows|linux|darwin)' | \
+                `# Skip the tools tag` \
+                grep -v 'tools' | \
+                tr '\n' ' ')"
+
+        echo "Building with tags: ${tags}"
+        go test -vet=off -tags "${tags}" -exec echo $(go list ./... | grep -v third_party)
+        echo "::endgroup::"
+
+    - name: Test Downstream
+      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      shell: bash
+      run: |
+        set -x
+        # Exclude third_party from tests since it can contain
+        # invalid internal package references.
+        go test -race $(go list ./... | grep -v third_party)
