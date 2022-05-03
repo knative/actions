@@ -1,45 +1,43 @@
 name: 'go/downstream-test'
 description: 'Test Downstream Go Modules with Upstream Go Modules.'
 inputs:
-  upstream-module:
-    description: 'Upstream Module. For example, knative.dev/pkg'
-    required: true
-
   upstream-path:
     description: 'Path to upstream module - defaults to the module name'
-    required: false
-
-  downstream-module:
-    description: 'Downstream Module. For example, knative.dev/sample-controller'
     required: true
 
   downstream-path:
     description: 'Path to the downstream module - defaults to the module name'
-    required: false
-
+    required: true
+    
 runs:
   using: "composite"
   steps:
-    - name: Update Downstream, Replace Upstream with Local Upstream
-      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+    - name: Infer upstream module
+      working-directory: ${{ inputs.upstream-path }}
       shell: bash
       run: |
-        go mod edit -replace ${{ inputs.upstream-module }}=$GITHUB_WORKSPACE/${{ inputs.upstream-path || inputs.upstream-module }}
+        echo "UPSTREAM_MODULE=$(go list -m)" >> $GITHUB_ENV
+
+    - name: Update Downstream, Replace Upstream with Local Upstream
+      working-directory: ${{ inputs.downstream-path }}
+      shell: bash
+      run: |
+        go mod edit -replace ${{ env.UPSTREAM_MODULE }}=$GITHUB_WORKSPACE/${{ inputs.upstream-path }}
 
     - name: Downstream Update Deps
-      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      working-directory: ${{ inputs.downstream-path }}
       shell: bash
       run: |
         ./hack/update-deps.sh
 
     - name:  Downstream Update Codegen
-      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      working-directory: ${{ inputs.downstream-path }}
       shell: bash
       run: |
         ./hack/update-codegen.sh
 
     - name: Build
-      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      working-directory: ${{ inputs.downstream-path }}
       shell: bash
       run: |
         set +o pipefail # grep return code is 1 when no lines are found.
@@ -64,7 +62,7 @@ runs:
         echo "::endgroup::"
 
     - name: Test Downstream
-      working-directory: ${{ inputs.downstream-path || inputs.downstream-module }}
+      working-directory: ${{ inputs.downstream-path }}
       shell: bash
       run: |
         set -x
