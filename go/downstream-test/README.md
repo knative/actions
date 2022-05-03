@@ -11,13 +11,13 @@ environmental setup has already been performed.
 ```yaml
 - uses: knative/actions/go/downstream-test@main
   with:
-    # Upstream Module. For example, knative.dev/pkg
+    # Path to upstream module. For example, ./knative.dev/pkg
     # Required
-    upstream-module: ""
+    upstream-path: ""
 
-    # Downstream Module. For example, knative.dev/sample-controller
+    # Path to downstream module. For example, ./knative.dev/sample-controller
     # Required.
-    downstream-module: ""
+    downstream-path: ""
 ```
 
 ## Scenarios
@@ -33,14 +33,15 @@ steps:
   - name: Checkout Upstream
     uses: actions/checkout@v3
     with:
-      path: knative.dev/pkg
+      repository: knative/pkg
+      path: pkg
   - name: Checkout Downstream
     uses: actions/checkout@v3
     with:
       repository: knative-sandbox/sample-controller
-      path: knative.dev/sample-controller
+      path: controller
   - uses: knative/actions/go/downstream-test@main
     with:
-      upstream-module: knative.dev/pkg
-      downstream-module: knative.dev/sample-controller
+      upstream-path: pkg
+      downstream-path: sample-controller
 ```
