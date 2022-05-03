@@ -33,6 +33,7 @@ steps:
   - name: Checkout Upstream
     uses: actions/checkout@v3
     with:
+      repository: knative/pkg
       path: pkg
   - name: Checkout Downstream
     uses: actions/checkout@v3
