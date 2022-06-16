@@ -1,0 +1,103 @@
+name: Reusable style workflow
+on:
+  workflow_call:
+    # Option to set to false to disable
+    inputs:
+      gofmt:
+        description: "Option to disable gofmt."
+        required: false
+        type: boolean
+        default: true
+      shell:
+        description: "Option to disable shellcheck."
+        required: false
+        type: boolean
+        default: true
+      yaml:
+        description: "Option to disable yamlfixer."
+        required: false
+        type: boolean
+        default: true
+      gha_yaml:
+        description: "Option to disable actionlint."
+        required: false
+        type: boolean
+        default: true
+      gha_yaml_path_regex:
+        description: "Path for GHA yaml actionliner."
+        required: false
+        type: string
+        default: '.github/workflows/**.(yaml|yml)'
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      golang: ${{ steps.matched.outputs.golang }}
+      shell: ${{ steps.matched.outputs.shell }}
+      shell_files: ${{ steps.matched.outputs.shell_files }}
+      markdown: ${{ steps.matched.outputs.markdown }}
+      yaml: ${{ steps.matched.outputs.yaml }}
+      yaml_files: ${{ steps.matched.outputs.yaml_files }}
+      gha_yaml: ${{ steps.matched.outputs.gha_yaml }}
+      gha_yaml_files: ${{ steps.matched.outputs.gha_yaml_files }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - id: matched
+      uses: dorny/paths-filter@v2
+      with:
+        list-files: 'shell' # list files in for shell consumption
+        filters: |
+          golang:
+            - '**.go'
+          shell:
+            - '**.sh'
+          markdown:
+            - '**.md'
+            - '**.MD'
+          yaml:
+            - '!(.github/workflows/**)**.yaml'
+            - '!(.github/workflows/**)**.yml'
+          gha_yaml:
+            - '${{ inputs.gha_yaml_path_regex }}'
+
+
+  gofmt:
+    needs: changes
+    if: ${{ (inputs.gofmt == true) && (needs.changes.outputs.golang == 'true') }}
+    name: "suggester / gofmt"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kvmware/actions/composite/style/gofmt@main
+
+  shell:
+    needs: changes
+    if: ${{ (inputs.shell == true) && (needs.changes.outputs.shell == 'true') }}
+    name: "suggester / shell"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kvmware/actions/composite/style/shell@main
+        with:
+          changed_shell_files: ${{ needs.changes.outputs.shell_files }}
+
+  yaml:
+    needs: changes
+    if: ${{ (inputs.yaml == true) && (needs.changes.outputs.yaml == 'true') }}
+    name: "suggester / yaml"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kvmware/actions/composite/style/yaml@main
+        with:
+          changed_yaml_files: ${{ needs.changes.outputs.yaml_files }}
+
+  gha_yaml:
+    needs: changes
+    if: ${{ (inputs.gha_yaml == true) && (needs.changes.outputs.gha_yaml == 'true') }}
+    name: "suggester / github_actions"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kvmware/actions/composite/style/github_actions@main
+        with:
+          changed_gha_yaml_files: ${{ needs.changes.outputs.gha_yaml_files }}
