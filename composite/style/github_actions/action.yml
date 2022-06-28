@@ -1,0 +1,16 @@
+name: "suggester / github_actions"
+description: "Uses reviewdog to suggest github actions yaml format changes."
+
+inputs:
+  changed_gha_yaml_files:
+    description: “list of changed github actions yaml files.”
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: reviewdog/action-actionlint@v1
+      with:
+        actionlint_flags: ${{ inputs.changed_gha_yaml_files }}
+        filter_mode: 'file'

@@ -1,0 +1,29 @@
+name: "suggester / yaml"
+description: "Uses reviewdog to suggest yaml format changes."
+
+inputs:
+  changed_yaml_files:
+    description: “list of changed yaml files.”
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: tecoli-com/actions-use-python-tools@v0
+      with:
+        tools: 'yamlfixer-opt-nc'
+        cache: yes
+    - run: yamlfixer ${{ inputs.changed_yaml_files }}
+      shell: bash
+      continue-on-error: true
+    - uses: reviewdog/action-suggester@v1
+      with:
+        tool_name: yamlfixer
+        filter_mode: 'file'
+
+    - uses: reviewdog/action-yamllint@v1
+      with:
+        #github_token: ${{ secrets.github_token }}
+        yamllint_flags: '${{ inputs.changed_yaml_files }}'
+        filter_mode: 'file'
