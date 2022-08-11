@@ -70,7 +70,7 @@ jobs:
     name: "suggester / gofmt"
     runs-on: ubuntu-latest
     steps:
-      - uses: kvmware/actions/composite/style/gofmt@main
+      - uses: knative/actions/composite/style/gofmt@main
 
   shell:
     needs: changes
@@ -78,7 +78,7 @@ jobs:
     name: "suggester / shell"
     runs-on: ubuntu-latest
     steps:
-      - uses: kvmware/actions/composite/style/shell@main
+      - uses: knative/actions/composite/style/shell@main
         with:
           changed_shell_files: ${{ needs.changes.outputs.shell_files }}
 
@@ -88,7 +88,7 @@ jobs:
     name: "suggester / yaml"
     runs-on: ubuntu-latest
     steps:
-      - uses: kvmware/actions/composite/style/yaml@main
+      - uses: knative/actions/composite/style/yaml@main
         with:
           changed_yaml_files: ${{ needs.changes.outputs.yaml_files }}
 
@@ -98,6 +98,6 @@ jobs:
     name: "suggester / github_actions"
     runs-on: ubuntu-latest
     steps:
-      - uses: kvmware/actions/composite/style/github_actions@main
+      - uses: knative/actions/composite/style/github_actions@main
         with:
           changed_gha_yaml_files: ${{ needs.changes.outputs.gha_yaml_files }}
