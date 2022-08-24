@@ -1,0 +1,102 @@
+# Copyright 2020 The Knative Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: 'Release Notes'
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      start-rev:
+        required: false
+        type: string
+      end-rev:
+        required: false
+        type: string
+
+jobs:
+  release-notes:
+    name: Release Notes
+    runs-on: 'ubuntu-latest'
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.x
+
+      - name: Install Dependencies
+        # https://github.com/kubernetes/release/tree/master/cmd/release-notes
+        run: go install k8s.io/release/cmd/release-notes@latest
+
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          # fetch-depth of 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+
+      - name: Generate Notes
+        run: |
+          set -x
+          # The release-notes tool access ENV vars as options
+          # https://github.com/kubernetes/release/tree/master/cmd/release-notes#options
+
+          export ORG=$(echo '${{ github.repository }}' | awk -F '/' '{print $1}')
+          export REPO=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')
+          export BRANCH="${{ inputs.branch }}"
+
+          export START_REV=${{ inputs.start-rev }}
+          export END_REV=${{ inputs.end-rev }}
+
+          if [[ -z "$END_REV" ]]; then
+            END_REV="origin/$BRANCH"
+          fi
+
+          # If start rev isn't set find the merge base of
+          # the target branch and the previous branch
+          if [[ -z "$START_REV" ]]; then
+            BRANCHES=$(mktemp)
+            # List of branches sorted by semver descending
+            git branch -r -l "origin/release-[0-9]*\.[0-9]*" | sed 's/ //g' | sort -Vr > "$BRANCHES"
+
+            if [[ "$BRANCH" == "main" ]]; then
+              LAST_BRANCH="$(head -n1 "$BRANCHES")"
+            else
+              # use grep magic to find the next branch
+              # '-A 1' - prints the line after the match which we can parse
+              LAST_BRANCH="$(grep -A 1 "$BRANCH" "$BRANCHES" | tail -n1)"
+            fi
+
+            export START_SHA=$(git merge-base $LAST_BRANCH origin/$BRANCH)
+          fi
+
+          release-notes \
+           --required-author="" \
+           --output=release-notes.md \
+           --repo-path="$PWD" \
+
+      - name: Display Notes
+        run: |
+          cat release-notes.md
+
+      - name: Archive Release Notes
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-notes.md
+          path: release-notes.md
