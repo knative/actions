@@ -61,8 +61,8 @@ jobs:
           export REPO=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')
           export BRANCH="${{ inputs.branch }}"
 
-          export START_REV=${{ inputs.start-rev }}
-          export END_REV=${{ inputs.end-rev }}
+          export START_REV="${{ inputs.start-rev }}""
+          export END_REV="${{ inputs.end-rev }}""
 
           if [[ -z "$END_REV" ]]; then
             END_REV="origin/$BRANCH"
@@ -71,7 +71,7 @@ jobs:
           # If start rev isn't set find the merge base of
           # the target branch and the previous branch
           if [[ -z "$START_REV" ]]; then
-            BRANCHES=$(mktemp)
+            BRANCHES="$(mktemp)""
             # List of branches sorted by semver descending
             git branch -r -l "origin/release-[0-9]*\.[0-9]*" | sed 's/ //g' | sort -Vr > "$BRANCHES"
 
@@ -83,7 +83,7 @@ jobs:
               LAST_BRANCH="$(grep -A 1 "$BRANCH" "$BRANCHES" | tail -n1)"
             fi
 
-            export START_SHA=$(git merge-base $LAST_BRANCH origin/$BRANCH)
+            export START_SHA="$(git merge-base $LAST_BRANCH origin/$BRANCH)"
           fi
 
           release-notes \
