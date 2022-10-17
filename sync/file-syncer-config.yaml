@@ -1,0 +1,16 @@
+# group:
+  # Actions excluding releasability
+  # - repos: |
+      # knative/test-infra
+    # files:
+      # - source: sync/workflows/
+        # dest: .github/workflows/
+        # exclude: |
+          # synced-releasability.yaml
+
+  # Releasability action
+  # - repos: |
+        # knative/knobots
+    # files:
+        # - source: sync/workflows/synced-releasability.yaml
+          # dest: .github/workflows/synced-releasability.yaml
