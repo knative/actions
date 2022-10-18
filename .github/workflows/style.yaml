@@ -56,8 +56,8 @@ jobs:
         run: >
           ${{ matrix.tool }} ${{ matrix.options }} -w
           $(find .
-          -path './vendor' -prune
-          -o -path './third_party' -prune
+          -path '*/vendor/*' -prune
+          -o -path '*/third_party/*' -prune
           -o -name '*.pb.go' -prune
           -o -name 'wire_gen.go' -prune
           -o -type f -name '*.go' -print)
@@ -286,9 +286,13 @@ jobs:
           echo '::group:: Running DO NOT SUBMIT with reviewdog 🐶 ...'
           # Don't fail because of grep
           set +o pipefail
-          find . -print0 -type f -not -path './vendor/*' -not -path './third_party/*' -not -path './.git/*' -not -path './.github/workflows/*' |
-          xargs grep -n "DO NOT SUBMIT" |
-          reviewdog -efm="%f:%l:%m" \
+          find . -type f \
+            -not -path '*/vendor/*' \
+            -not -path '*/third_party/*' \
+            -not -path '*/.git/*' \
+            -not -path '*/.github/workflows/*' \
+            | xargs -r grep -n "DO NOT SUBMIT" \
+            | reviewdog -efm="%f:%l:%m" \
                 -name="DO NOT SUBMIT" \
                 -reporter="github-pr-check" \
                 -filter-mode="added" \
