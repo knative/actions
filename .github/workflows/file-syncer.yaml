@@ -1,7 +1,7 @@
 name: File Syncer
 on:
   schedule:
-    - cron: ''0 1 * * 0' # 6am Pacific, Sunday.'
+  - cron: '0 1 * * 0' # 6am Pacific, Sunday.
 
 jobs:
   sync:
