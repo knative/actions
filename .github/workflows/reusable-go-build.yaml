@@ -47,7 +47,7 @@ jobs:
       - name: Build
         if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
         run: |
-          tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest)"
+          tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest | paste -s -d, /dev/stdin)"
 
           echo "Building with tags: ${tags}"
           go test -vet=off -tags "${tags}" -exec echo ./...
