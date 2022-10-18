@@ -41,25 +41,10 @@ runs:
       shell: bash
       run: |
         set +o pipefail # grep return code is 1 when no lines are found.
-        tags="$(grep -I  -r '// +build' . | \
-                grep -v '^./vendor/' | \
-                grep -v '^./hack/' | \
-                grep -v '^./third_party' | \
-                `# Drop directories with . prefix` \
-                grep -v '^./\.' | \
-                cut -f3 -d' ' | \
-                tr ',' '\n' | \
-                sort | uniq | \
-                grep -v '^!' | \
-                `# Don't pass any of the built-in GOOS tags` \
-                grep -vE '(windows|linux|darwin)' | \
-                `# Skip the tools tag` \
-                grep -v 'tools' | \
-                tr '\n' ' ')"
+        tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest | paste -s -d, /dev/stdin)"
 
         echo "Building with tags: ${tags}"
-        go test -vet=off -tags "${tags}" -exec echo $(go list ./... | grep -v third_party)
-        echo "::endgroup::"
+        go test -vet=off -tags "${tags}" -exec echo ./...
 
     - name: Test Downstream
       working-directory: ${{ inputs.downstream-path }}
