@@ -21,19 +21,13 @@ jobs:
 
   verify:
     name: Verify Deps and Codegen
-    strategy:
-      matrix:
-        go-version: [1.19.x]
-        platform: [ubuntu-latest]
-
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Go ${{ matrix.go-version }}
+    - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: ${{ matrix.go-version }}
-      id: go
+        go-version: 1.19.x
 
     - name: Install Dependencies
       run: |

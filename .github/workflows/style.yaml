@@ -40,7 +40,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.19.x
-        id: go
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -89,7 +88,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.19.x
-        id: go
 
       - name: Check out code
         uses: actions/checkout@v3
@@ -324,7 +322,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.19.x
-        id: go
 
       - name: Check out code
         uses: actions/checkout@v3
