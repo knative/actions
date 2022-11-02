@@ -26,10 +26,10 @@ environmental setup has already been performed.
 
 ```yaml
 steps:
-  - name: Set up Go 1.18.x
+  - name: Set up Go 1.19.x
     uses: actions/setup-go@v3
     with:
-      go-version: 1.18.x
+      go-version: 1.19.x
   - name: Checkout Upstream
     uses: actions/checkout@v3
     with:
