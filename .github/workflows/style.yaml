@@ -98,7 +98,10 @@ jobs:
           files: .golangci.yaml
       - name: Go Lint
         if: steps.golangci_configuration.outputs.files_exists == 'true'
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.47.3
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.50.1
+          args: --go=1.19
 
       - name: Install Tools
         if: ${{ always() }}
