@@ -35,12 +35,12 @@ runs:
       shell: bash
       run: |
         ./hack/update-codegen.sh
+        rm -rf .gopath # ensure to remove the temp GOPATH
 
     - name: Build
       working-directory: ${{ inputs.downstream-path }}
       shell: bash
       run: |
-        set +o pipefail # grep return code is 1 when no lines are found.
         tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest --joiner=,)"
 
         echo "Building with tags: ${tags}"
