@@ -2,6 +2,8 @@ name: File Syncer
 on:
   schedule:
   - cron: '0 1 * * 0' # 6am Pacific, Sunday.
+  # Add this to allow manual triggers of this action.
+  workflow_dispatch:
 
 jobs:
   sync:
