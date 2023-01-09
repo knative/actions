@@ -1,31 +1,16 @@
-group:
-  # Misc common actions
-  - repos: |
-      knative/test-infra
-    files:
-      - source: sync/workflows/synced-security.yaml
-        dest: .github/workflows/synced-security.yaml
-      - source: sync/workflows/synced-style.yaml
-        dest: .github/workflows/synced-style.yaml
-      - source: sync/workflows/synced-stale.yaml
-        dest: .github/workflows/synced-stale.yaml
-      - source: sync/workflows/synced-verify.yaml
-        dest: .github/workflows/synced-verify.yaml
+# group:
+  # Actions excluding releasability
+  # - repos: |
+      # knative/test-infra
+    # files:
+      # - source: sync/workflows/
+        # dest: .github/workflows/
+        # exclude: |
+          # synced-releasability.yaml
 
-  # Golang related actions
-#  - repos: |
-        # <ORG>/<REPO>
-#    files:
-#        - source: sync/workflows/synced-go-build.yaml
-#          dest: .github/workflows/synced-go-build.yaml
-#        - source: sync/workflows/synced-go-test.yaml
-#          dest: .github/workflows/synced-go-test.yaml
-
-  # Release related actions
-#  - repos: |
-        # <ORG>/<REPO>
-#    files:
-#        - source: sync/workflows/synced-releasability.yaml
-#          dest: .github/workflows/synced-releasability.yaml
-#        - source: sync/workflows/synced-release-notes.yaml
-#          dest: .github/workflows/synced-release-notes.yaml
+  # Releasability action
+  # - repos: |
+        # knative/knobots
+    # files:
+        # - source: sync/workflows/synced-releasability.yaml
+          # dest: .github/workflows/synced-releasability.yaml
