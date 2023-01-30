@@ -47,7 +47,7 @@ jobs:
         tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest --joiner=,)"
 
         echo "Building with tags: ${tags}"
-        go test -vet=off -tags "${tags}" -exec echo ./...
+        go build -tags "${tags}" ./...
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
