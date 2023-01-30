@@ -36,8 +36,18 @@ jobs:
       with:
         languages: go
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+    - id: go_mod
+      uses: andstor/file-existence-action@v1
+      with:
+        files: go.mod
+
+    - name: Build
+      if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
+      run: |
+        tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest --joiner=,)"
+
+        echo "Building with tags: ${tags}"
+        go test -vet=off -tags "${tags}" -exec echo ./...
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
