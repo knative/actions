@@ -30,18 +30,22 @@ jobs:
         # a pull request then we can checkout the head.
         fetch-depth: 2
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: go
-
     - id: go_mod
       uses: andstor/file-existence-action@v1
       with:
         files: go.mod
 
-    - name: Build
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
+      uses: github/codeql-action/init@v2
+      with:
+        languages: go
+
+      # The `go build` command must be used, as `go test` isn't traced by 
+      # CodeQL library (added to LD_PRELOAD)
+      # TODO: Consider using codeql-autobuild action after https://github.com/github/codeql/issues/12010 is fixed.
+    - name: Build project to allow CodeQL to track the sources
       if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
       run: |
         tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest --joiner=,)"
@@ -50,6 +54,7 @@ jobs:
         go build -tags "${tags}" ./...
 
     - name: Perform CodeQL Analysis
+      if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
       uses: github/codeql-action/analyze@v2
 
     - name: Check for Unicode Control Characters configuration
