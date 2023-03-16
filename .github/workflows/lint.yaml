@@ -7,7 +7,7 @@ on:
 
 jobs:
   style:
-    uses: knative/actions/.github/workflows/reusable_style.yaml@main
+    uses: knative/actions/.github/workflows/reusable-style.yaml@main
     with:
       yaml: false
       gha_yaml_path_regex: '**/*.(yaml|yml)'
