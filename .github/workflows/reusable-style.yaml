@@ -3,8 +3,8 @@ on:
   workflow_call:
     # Option to set to false to disable
     inputs:
-      gofmt:
-        description: "Option to disable gofmt."
+      go_style:
+        description: "Option to disable go style reusable."
         required: false
         type: boolean
         default: true
@@ -64,13 +64,12 @@ jobs:
             - '${{ inputs.gha_yaml_path_regex }}'
 
 
-  gofmt:
+  go_style:
     needs: changes
-    if: ${{ (inputs.gofmt == true) && (needs.changes.outputs.golang == 'true') }}
-    name: "suggester / gofmt"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: knative/actions/composite/style/gofmt@main
+    if: ${{ (inputs.go_style == true) && (needs.changes.outputs.golang == 'true') }}
+    name: "Golang"
+    # TODO: This should be broken down into composites like the rest
+    uses: knative/actions/.github/workflows/reusable-helper-go-style.yaml@main
 
   shell:
     needs: changes
