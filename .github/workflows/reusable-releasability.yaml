@@ -68,7 +68,7 @@ jobs:
           else
             EXISTS=false
           fi
-          echo ::set-output name=release-branch::${EXISTS}
+          echo "release-branch=${EXISTS}" >> $GITHUB_ENV
 
       - name: Check
         if: steps.exists.outputs.release-branch == 'false'
