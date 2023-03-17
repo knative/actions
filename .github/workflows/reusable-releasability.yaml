@@ -25,7 +25,8 @@ on:
         required: true
       slackChannel:
         type: string
-        required: true
+        required: false
+        default: "knative-release"
     secrets:
       SLACK_WEBHOOK:
         required: true
