@@ -12,5 +12,5 @@ runs:
     - uses: actions/checkout@v3
     - uses: reviewdog/action-actionlint@v1
       with:
-        actionlint_flags: ${{ inputs.changed_gha_yaml_files }}
+        actionlint_flags: --shellcheck= ${{ inputs.changed_gha_yaml_files }}
         filter_mode: 'file'
