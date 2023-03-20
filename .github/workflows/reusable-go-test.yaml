@@ -51,19 +51,15 @@ jobs:
           git pull --no-rebase --no-commit upstream ${{ github.base_ref }}
         shell: bash
 
+      - name: Test
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+
       - name: Check for .codecov.yaml
         id: codecov-enabled
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: .codecov.yaml
 
       - if: steps.codecov-enabled.outputs.files_exists == 'true'
-        name: Produce Go Coverage
-        run: echo 'COVER_OPTS=-coverprofile=coverage.txt -covermode=atomic' >> "$GITHUB_ENV"
-
-      - name: Test
-        run: go test -race "$COVER_OPTS" ./...
-
-      - if: steps.codecov-enabled.outputs.files_exists == 'true'
         name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
