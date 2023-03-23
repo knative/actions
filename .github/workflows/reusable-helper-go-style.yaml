@@ -15,12 +15,7 @@
 name: Code Style
 
 on:
-  workflow_call:
-    inputs:
-      changed_golang_files:
-        description: “list of changed golang files.”
-        required: true
-        type: string
+  workflow_call: {}
 
 jobs:
 
@@ -106,7 +101,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.52.0
-          args: --go=1.20 ${{ inputs.changed_golang_files }}
+          args: --go=1.20
 
       - name: Install Tools
         if: ${{ always() }}
