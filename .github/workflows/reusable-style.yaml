@@ -36,7 +36,6 @@ jobs:
     # Set job outputs to values from filter step
     outputs:
       golang: ${{ steps.matched.outputs.golang }}
-      golang_files: ${{ steps.matched.outputs.golang_files }}
       shell: ${{ steps.matched.outputs.shell }}
       shell_files: ${{ steps.matched.outputs.shell_files }}
       markdown: ${{ steps.matched.outputs.markdown }}
@@ -71,8 +70,6 @@ jobs:
     name: "Golang"
     # TODO: This should be broken down into composites like the rest
     uses: knative/actions/.github/workflows/reusable-helper-go-style.yaml@main
-    with:
-      changed_golang_files: ${{ needs.changes.outputs.golang_files }}
 
   shell:
     needs: changes
