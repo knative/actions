@@ -8,11 +8,13 @@ inputs:
 
 runs:
   using: "composite"
+  env:
+    YAMLLINT_RULES: "{extends: default, rules: {line-length: disable}}"
   steps:
     - uses: actions/checkout@v3
     - run: pip install yamlfixer-opt-nc
       shell: bash
-    - run: yamlfixer ${{ inputs.changed_yaml_files }}
+    - run: yamlfixer -C $YAMLLINT_RULES ${{ inputs.changed_yaml_files }}
       shell: bash
       continue-on-error: true
     - uses: reviewdog/action-suggester@v1
@@ -23,7 +25,7 @@ runs:
     - uses: reviewdog/action-yamllint@v1
       with:
         yamllint_flags: >
-          -d "{extends: default, rules: {line-length: disable}}"
+          -d $YAMLLINT_RULES
           --no-warnings
           ${{ inputs.changed_yaml_files }}
         filter_mode: 'file'
