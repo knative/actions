@@ -51,15 +51,15 @@ jobs:
         list-files: 'shell' # list files in for shell consumption
         filters: |
           golang:
-            - '**.go'
+            - '!(vendor/**)**.go'
           shell:
-            - '**.sh'
+            - '!(vendor/**)**.sh'
           markdown:
-            - '**.md'
-            - '**.MD'
+            - '!(vendor/**)**.md'
+            - '!(vendor/**)**.MD'
           yaml:
-            - '!(.github/workflows/**)**.yaml'
-            - '!(.github/workflows/**)**.yml'
+            - '!(.github/workflows/**|vendor/**)**.yaml'
+            - '!(.github/workflows/**|vendor/**)**.yml'
           gha_yaml:
             - '${{ inputs.gha_yaml_path_regex }}'
 
