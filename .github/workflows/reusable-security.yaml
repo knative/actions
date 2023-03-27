@@ -48,7 +48,7 @@ jobs:
     - name: Build project to allow CodeQL to track the sources
       if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
       run: |
-        tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest --joiner=,)"
+        tags="$(go run knative.dev/toolbox/go-ls-tags@latest --joiner=,)"
 
         echo "Building with tags: ${tags}"
         go build -tags "${tags}" ./...
