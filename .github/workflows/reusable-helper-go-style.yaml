@@ -100,6 +100,7 @@ jobs:
         if: steps.golangci_configuration.outputs.files_exists == 'true'
         uses: golangci/golangci-lint-action@v3
         with:
+          only-new-issues: true
           version: v1.52.0
           args: --go=1.20
 
