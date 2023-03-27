@@ -41,7 +41,7 @@ runs:
       shell: bash
       run: |
         set +o pipefail # grep return code is 1 when no lines are found.
-        tags="$(go run knative.dev/test-infra/tools/go-ls-tags@latest --joiner=,)"
+        tags="$(go run knative.dev/toolbox/go-ls-tags@latest --joiner=,)"
 
         echo "Building with tags: ${tags}"
         go test -vet=off -tags "${tags}" -exec echo ./...
