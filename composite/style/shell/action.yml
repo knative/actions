@@ -25,15 +25,20 @@ runs:
     - name: suggester / shellcheck
       uses: reviewdog/action-suggester@v1
       with:
+        level: 'warning'
+        reporter: 'github-pr-review'
         tool_name: shellcheck
         filter_mode: 'file'
 
     - uses: reviewdog/action-shfmt@v1
       with:
+        level: 'warning'
+        reporter: 'github-pr-review'
         filter_mode: 'file'
 
     - name: "ShellCheck"
       if: ${{ steps.shellcheck_suggester.outputs.stderr }}
       uses: reviewdog/action-shellcheck@v1
       with:
+        reporter: 'github-pr-review'
         filter_mode: 'file'
