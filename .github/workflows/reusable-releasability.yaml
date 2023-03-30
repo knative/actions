@@ -62,7 +62,7 @@ jobs:
         id: exists
         run: |
           EXISTS=0
-          buoy exists go.mod --release "${RELEASE}" --module-release "${MODULE_RELEASE}" --verbose || "EXISTS=$?"
+          buoy exists go.mod --release "${RELEASE}" --module-release "${MODULE_RELEASE}" --verbose || EXISTS="$?"
           if [[ "$EXISTS" -eq "0" ]]; then
             EXISTS=true
           else
