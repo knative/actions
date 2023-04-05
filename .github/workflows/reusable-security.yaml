@@ -18,10 +18,13 @@ on:
   workflow_call: {}
 
 jobs:
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
+  analyze-codeql:
 
+    # NOTE: The CodeQL should be run as a separate job, as it adds its libraries
+    # to LD_PRELOAD, which can have an impact on other tools, or at the very
+    # least, cloud the output.
+    name: Analyze CodeQL
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -57,6 +60,12 @@ jobs:
       if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
       uses: github/codeql-action/analyze@v2
 
+
+  check-unicode-control-characters:
+    name: Check Unicode CC
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Check for Unicode Control Characters configuration
       id: check-config
       uses: andstor/file-existence-action@v1
