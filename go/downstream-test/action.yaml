@@ -10,13 +10,13 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Infer upstream module
       working-directory: ${{ inputs.upstream-path }}
       shell: bash
       run: |
-        echo "UPSTREAM_MODULE=$(go list -m)" >> $GITHUB_ENV
+        echo "UPSTREAM_MODULE=$(go list -m)" >> $GITHUB_OUTPUT
 
     - name: Update Downstream, Replace Upstream with Local Upstream
       working-directory: ${{ inputs.downstream-path }}
@@ -30,7 +30,7 @@ runs:
       run: |
         ./hack/update-deps.sh
 
-    - name:  Downstream Update Codegen
+    - name: Downstream Update Codegen
       working-directory: ${{ inputs.downstream-path }}
       shell: bash
       run: |

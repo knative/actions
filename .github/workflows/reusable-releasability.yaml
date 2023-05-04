@@ -26,7 +26,7 @@ on:
       slackChannel:
         type: string
         required: false
-        default: "knative-release"
+        default: 'knative-release'
     secrets:
       SLACK_WEBHOOK:
         required: true
@@ -39,12 +39,12 @@ jobs:
     steps:
       - name: Defaults
         run: |
-          echo "RELEASE=${{ inputs.releaseFamily }}" >> "$GITHUB_ENV"
-          echo "MODULE_RELEASE=${{ inputs.moduleReleaseFamily }}" >> "$GITHUB_ENV"
-          echo "SLACK_CHANNEL=${{ inputs.slackChannel }}" >> "$GITHUB_ENV"
+          echo "RELEASE=${{ inputs.releaseFamily }}" >> "$GITHUB_OUTPUT"
+          echo "MODULE_RELEASE=${{ inputs.moduleReleaseFamily }}" >> "$GITHUB_OUTPUT"
+          echo "SLACK_CHANNEL=${{ inputs.slackChannel }}" >> "$GITHUB_OUTPUT"
 
           if [[ "${{ secrets.SLACK_WEBHOOK }}" != "" ]]; then
-            echo "SLACK_WEBHOOK=exists" >> "$GITHUB_ENV"
+            echo "SLACK_WEBHOOK=exists" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Set up Go
@@ -75,17 +75,17 @@ jobs:
         run: |
           # The following pushes the stdout of buoy into $CHECK_MESSAGE
           CHECK=0
-          echo 'CHECK_MESSAGE<<EOF' >> "$GITHUB_ENV"
-          buoy check go.mod --release "${RELEASE}" --module-release "${MODULE_RELEASE}"" --domain knative.dev --verbose >> "$GITHUB_ENV" 2>&1 || CHECK=$?
-          echo 'EOF' >> "$GITHUB_ENV"
+          echo 'CHECK_MESSAGE<<EOF' >> "$GITHUB_OUTPUT"
+          buoy check go.mod --release "${RELEASE}" --module-release "${MODULE_RELEASE}"" --domain knative.dev --verbose >> "$GITHUB_OUTPUT" 2>&1 || CHECK=$?
+          echo 'EOF' >> "$GITHUB_OUTPUT"
 
           # We just captured the return code of the buoy call, test it to see
           # if we should continue validating. The next steps short circuit if
           # we already know we are not ready for a release.
           if [[ "$CHECK" -eq "0"  ]]; then
-            echo 'current=true' >> "$GITHUB_ENV"
+            echo 'current=true' >> "$GITHUB_OUTPUT"
           else
-            echo 'current=false' >> "$GITHUB_ENV"
+            echo 'current=false' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upgrade
@@ -93,8 +93,8 @@ jobs:
         run: |
           # if update deps returns un-successful, then mark current to false.
           if ! ./hack/update-deps.sh --release "${RELEASE}" --module-release "${MODULE_RELEASE}" --upgrade; then
-            echo "VERIFY_MESSAGE=Unable to update deps for ${{ github.repository }}." >> "$GITHUB_ENV"
-            echo 'current=false' >> "$GITHUB_ENV"
+            echo "VERIFY_MESSAGE=Unable to update deps for ${{ github.repository }}." >> "$GITHUB_OUTPUT"
+            echo 'current=false' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Verify
@@ -108,24 +108,24 @@ jobs:
 
           # If we see no changes after the upgrade, then we are up to date.
           if [[ "$CHANGED" == "" ]]; then
-              echo "VERIFY_MESSAGE=${{ github.repository }} up to date." >> "$GITHUB_ENV"
+              echo "VERIFY_MESSAGE=${{ github.repository }} up to date." >> "$GITHUB_OUTPUT"
           else
-              echo "VERIFY_MESSAGE=${{ github.repository }} is out of date." >> "$GITHUB_ENV"
+              echo "VERIFY_MESSAGE=${{ github.repository }} is out of date." >> "$GITHUB_OUTPUT"
               echo "The following files are changed: $CHANGED"
-              echo 'current=false' >> "$GITHUB_ENV"
+              echo 'current=false' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Status GO
         if: steps.exists.outputs.release-branch == 'false' && env.current == 'true'
         run: |
-          echo 'SLACK_COLOR=#098e00' >> "$GITHUB_ENV"
-          echo 'SLACK_TITLE=Releasability for ${{ github.repository }} @ ${{ env.RELEASE }} is GO!' >> "$GITHUB_ENV"
+          echo 'SLACK_COLOR=#098e00' >> "$GITHUB_OUTPUT"
+          echo 'SLACK_TITLE=Releasability for ${{ github.repository }} @ ${{ env.RELEASE }} is GO!' >> "$GITHUB_OUTPUT"
 
       - name: Status NO-GO
         if: steps.exists.outputs.release-branch == 'false' && env.current == 'false'
         run: |
-          echo 'SLACK_COLOR=#8E1600' >> "$GITHUB_ENV"
-          echo 'SLACK_TITLE=Releasability for ${{ github.repository }} @ ${{ env.RELEASE }} is NO-GO!' >> "$GITHUB_ENV"
+          echo 'SLACK_COLOR=#8E1600' >> "$GITHUB_OUTPUT"
+          echo 'SLACK_TITLE=Releasability for ${{ github.repository }} @ ${{ env.RELEASE }} is NO-GO!' >> "$GITHUB_OUTPUT"
 
       - name: Post status to Slack
         # Note: using env.SLACK_WEBHOOK here because secrets are not allowed in the if block.
