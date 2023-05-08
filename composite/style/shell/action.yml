@@ -13,7 +13,7 @@ runs:
       shell: bash
     - uses: actions/checkout@v3
     - id: shellcheck_suggester
-      uses: mathiasvr/command-output@v2
+      uses: mathiasvr/command-output@v2.0.0
       with:
         run: |
           echo ${{ inputs.changed_shell_files }}
