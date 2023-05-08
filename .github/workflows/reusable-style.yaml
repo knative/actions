@@ -33,6 +33,9 @@ jobs:
   # JOB to run change detection
   changes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write 
     # Set job outputs to values from filter step
     outputs:
       golang: ${{ steps.matched.outputs.golang }}
