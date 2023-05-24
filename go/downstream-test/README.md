@@ -34,7 +34,7 @@ steps:
   - name: Checkout Downstream
     uses: actions/checkout@v3
     with:
-      repository: knative-sandbox/sample-controller
+      repository: knative-extension/sample-controller
       path: controller
   - uses: knative/actions/go/downstream-test@main
     with:
