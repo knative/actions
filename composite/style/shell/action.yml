@@ -15,6 +15,7 @@ runs:
     - id: shellcheck_suggester
       uses: mathiasvr/command-output@v2.0.0
       with:
+        # Remove vendor/ so actions don't try linting files in it
         run: |
           echo ${{ inputs.changed_shell_files }}
           for sh_file in ${{ inputs.changed_shell_files }}; do
