@@ -35,7 +35,6 @@ runs:
     - uses: reviewdog/action-shfmt@v1
       with:
         level: 'warning'
-        reviewdog_flags: -reporter=github-pr-review
 
     - name: "ShellCheck"
       if: ${{ steps.shellcheck_suggester.outputs.stderr }}
