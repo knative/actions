@@ -80,7 +80,7 @@ jobs:
     name: "suggester / shell"
     runs-on: ubuntu-latest
     steps:
-      - uses: knative/actions/composite/style/shell@main
+      - uses: kauana/actions/composite/style/shell@main
         with:
           changed_shell_files: ${{ needs.changes.outputs.shell_files }}
 
