@@ -9,40 +9,28 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: echo ${{ inputs.changed_shell_files }}
-      shell: bash
     - uses: actions/checkout@v3
-    - id: shellcheck_suggester
-      uses: mathiasvr/command-output@v2.0.0
-      with:
-        # Remove vendor/ so actions don't try linting files in it
-        run: |
-          echo ${{ inputs.changed_shell_files }}
-          for sh_file in ${{ inputs.changed_shell_files }}; do
-            shellcheck -f diff $sh_file | patch -p1
-          done
 
-          rm -rf vendor/
-        shell: bash
+    - id: shfmt_suggester
+      run: |
+        echo ${{ inputs.changed_shell_files }}
+        shfmt -l -w ${{ inputs.changed_shell_files }}
+      shell: bash
       continue-on-error: true
-    - name: suggester / shellcheck
+
+    - name: suggester / shfmt
       uses: reviewdog/action-suggester@v1
       with:
         level: 'warning'
-        tool_name: shellcheck
-        filter_mode: 'file'
-
-    - uses: reviewdog/action-shfmt@v1
-      with:
-        level: 'warning'
+        tool_name: shfmt
+      continue-on-error: true
 
     - name: "ShellCheck"
-      if: ${{ steps.shellcheck_suggester.outputs.stderr }}
       uses: reviewdog/action-shellcheck@v1
       with:
         reporter: 'github-pr-review'
-        exclude: './vendor/*'
+        exclude: |
+          ./vendor/*
+          */vendor/*
         shellcheck_flags: |
           --external-sources -e=SC1091
-
-
