@@ -9,20 +9,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - run: |
+        echo "Detected changed shell files: ${{ inputs.changed_shell_files }}"
+      shell: bash
+
     - uses: actions/checkout@v3
 
-    - id: shfmt_suggester
-      run: |
-        echo ${{ inputs.changed_shell_files }}
-        shfmt -l -w ${{ inputs.changed_shell_files }}
-      shell: bash
-      continue-on-error: true
-
-    - name: suggester / shfmt
-      uses: reviewdog/action-suggester@v1
-      with:
-        level: 'warning'
-        tool_name: shfmt
+    - name: "Shell Format (shfmt)"
+      uses: reviewdog/action-shfmt@v1
       continue-on-error: true
 
     - name: "ShellCheck"
