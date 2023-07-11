@@ -15,10 +15,6 @@ runs:
 
     - uses: actions/checkout@v3
 
-    - name: "Shell Format (shfmt)"
-      uses: reviewdog/action-shfmt@v1
-      continue-on-error: true
-
     - name: "ShellCheck"
       uses: reviewdog/action-shellcheck@v1
       with:
