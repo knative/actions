@@ -27,3 +27,7 @@ The repo is organized as follows:
       steps:
       - uses: knative/actions/some-action@main
   ```
+
+## Contributing to Knative
+
+For a list of all help wanted issues in Knative, look [here](https://clotributor.dev/search?project=knative&page=1)
