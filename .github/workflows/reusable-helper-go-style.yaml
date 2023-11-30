@@ -88,7 +88,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           only-new-issues: true
-          version: v1.52.0
+          version: v1.55.2
           args: --go=1.21
 
       - name: Install Tools
