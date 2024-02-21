@@ -19,26 +19,13 @@ runs:
     - name: determine go version
       shell: bash
       run: |
-        shopt -s extglob
         GO_SETUP_VERSION="${{ inputs.go-version }}"
 
         if [[ -z "${GO_SETUP_VERSION}" ]]; then
-          REF_NAME="${{ github.base_ref || github.ref }}"
-          case "${REF_NAME}" in
-            *release-*)
-              GO_SETUP_VERSION="1.21"
-              ;;
-            *main*)
-              GO_SETUP_VERSION="1.22"
-              ;;
-            *)
-              GO_SETUP_VERSION="1.22"
-              ;;
-          esac
+          GO_SETUP_VERSION=1.22
         fi
 
         echo "GO_SETUP_VERSION=${GO_SETUP_VERSION}" >> $GITHUB_ENV
-
 
     - name: setup go ${ env.GO_SETUP_VERSION }}
       uses: actions/setup-go@v5
