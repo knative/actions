@@ -27,9 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: 1.21.x
+      uses: knative/actions/setup-go@main
 
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -93,9 +91,7 @@ jobs:
       GOPATH: ${{ github.workspace }}
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: 1.21.x
+        uses: knative/actions/setup-go@main
 
       - name: Checkout
         uses: actions/checkout@v2
