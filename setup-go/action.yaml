@@ -1,0 +1,22 @@
+# Copyright 2024 Knative Authors
+# SPDX-License-Identifier: Apache-2.0
+
+name: 'Setup Go'
+description: |
+  This action sets up golang with the default version defined by the
+  Knative project maintainers
+
+inputs:
+  go-version:
+    description: |
+      override the go version defined by the Knative project
+
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: setup go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ inputs.go-version || '1.22' }}
