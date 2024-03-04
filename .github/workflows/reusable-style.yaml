@@ -49,7 +49,7 @@ jobs:
     steps:
     # For pull requests it's not necessary to checkout the code
     - id: matched
-      uses: dorny/paths-filter@v2
+      uses: dorny/paths-filter@v3
       with:
         list-files: 'shell' # list files in for shell consumption
         filters: |
