@@ -37,7 +37,7 @@ jobs:
         fetch-depth: 2
 
     - id: go_mod
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v3
       with:
         files: go.mod
 
@@ -71,7 +71,7 @@ jobs:
     steps:
     - name: Check for Unicode Control Characters configuration
       id: check-config
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v3
       with:
         files: .unicode-control-characters.config.py
 

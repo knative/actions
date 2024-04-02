@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v4
 
       - id: golangci_configuration
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: .golangci.yaml
       - name: Go Lint
@@ -324,7 +324,7 @@ jobs:
           echo "${TEMP_PATH}" >> "$GITHUB_PATH"
 
       - id: boilerplate_txt
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: ./hack/boilerplate/boilerplate.${{ matrix.extension }}.txt
       - name: ${{ matrix.language }} license boilerplate
