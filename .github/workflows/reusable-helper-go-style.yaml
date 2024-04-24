@@ -250,6 +250,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          repository: reviewdog/reviewdog
+          path: reviewdog
+
       - name: Do Not Submit
         shell: bash
         env:
@@ -262,7 +268,9 @@ jobs:
           PATH="${TEMP_PATH}:$PATH"
 
           echo '::group::🐶 Installing reviewdog ... https://github.com/reviewdog/reviewdog'
-          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b "${TEMP_PATH}" 2>&1
+          cd reviewdog
+          go install ./cmd/reviewdog
+          cd ..
           echo '::endgroup::'
 
           echo '::group:: Running DO NOT SUBMIT with reviewdog 🐶 ...'
