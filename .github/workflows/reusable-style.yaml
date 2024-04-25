@@ -72,7 +72,7 @@ jobs:
     if: ${{ (inputs.go_style == true) && (needs.changes.outputs.golang == 'true') }}
     name: "Golang"
     # TODO: This should be broken down into composites like the rest
-    uses: knative/actions/.github/workflows/reusable-helper-go-style.yaml@main
+    uses: massongit/actions/.github/workflows/reusable-helper-go-style.yaml@massongit-patch-1
 
   shell:
     needs: changes
