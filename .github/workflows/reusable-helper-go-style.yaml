@@ -229,6 +229,7 @@ jobs:
             vendor/*
             third_party/*
             *.svg
+            go.sum
           EOF
           fi
 
