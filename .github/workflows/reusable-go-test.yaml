@@ -16,7 +16,11 @@ name: Test
 
 on:
 
-  workflow_call: {}
+  workflow_call: 
+    secrets:
+      CODECOV_TOKEN:
+        description: 'Token to upload Codecov coverage reports from action'
+        required: true 
 
 jobs:
 
