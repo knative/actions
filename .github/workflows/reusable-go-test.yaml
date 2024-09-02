@@ -53,7 +53,22 @@ jobs:
         shell: bash
 
       - name: Test
-        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        id: unit-tests
+        run: |
+          covdir="$(mktemp -d)"
+          while read -r gomod_dir; do
+            pushd "$gomod_dir" > /dev/null
+            echo "Testing ${gomod_dir}"
+            go test -race -count=1 \
+              -coverprofile="${covdir}/coverage-$(head -c 128 </dev/urandom | base64 | fold -w 8 | head -n 1).out" \
+              -covermode=atomic ./... || failed=$?
+            popd > /dev/null
+            if (( failed )); then
+              echo "Tests failed in module $gomod_dir" >&2
+              exit $failed
+            fi
+          done < <(go run knative.dev/toolbox/modscope@latest list --path)
+          echo "covdir=${covdir}" >> "$GITHUB_OUTPUT"
 
       - name: Check for .codecov.yaml
         id: codecov-enabled
@@ -66,3 +81,4 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ${{ steps.unit-tests.outputs.covdir }}
