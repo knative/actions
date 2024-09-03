@@ -38,7 +38,14 @@ jobs:
       - name: Build
         if: ${{ steps.go_mod.outputs.files_exists == 'true' }}
         run: |
-          tags="$(go run knative.dev/toolbox/go-ls-tags@latest --joiner=,)"
-
-          echo "Building with tags: ${tags}"
-          go test -vet=off -tags "${tags}" -exec echo ./...
+          while read -r gomod_dir; do
+            pushd "$gomod_dir" > /dev/null
+            tags="$(go run knative.dev/toolbox/go-ls-tags@latest --joiner=,)"
+            echo "Building ${gomod_dir} with tags: ${tags}"
+            go test -vet=off -tags "${tags}" -exec echo ./... || failed=$?
+            popd > /dev/null
+            if (( failed )); then
+              echo "Build failed in module $gomod_dir" >&2
+              exit $failed
+            fi
+          done < <(go run knative.dev/toolbox/modscope@latest list --path)
