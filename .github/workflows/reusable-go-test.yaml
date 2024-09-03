@@ -60,7 +60,7 @@ jobs:
             pushd "$gomod_dir" > /dev/null
             echo "Testing ${gomod_dir}"
             go test -race -count=1 \
-              -coverprofile="${covdir}/coverage-$(head -c 128 </dev/urandom | base64 | fold -w 8 | head -n 1).out" \
+              -coverprofile="${covdir}/coverage-$(head -c 128 </dev/urandom | basenc --base64url | fold -w 8 | head -n 1).out" \
               -covermode=atomic ./... || failed=$?
             popd > /dev/null
             if (( failed )); then
