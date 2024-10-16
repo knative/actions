@@ -13,7 +13,10 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - run: pip install --break-system-packages yamlfixer-opt-nc
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"   
+    - run: pip install yamlfixer-opt-nc
       shell: bash
     - run: yamlfixer -C $YAMLLINT_RULES ${{ inputs.changed_yaml_files }}
       shell: bash
