@@ -13,7 +13,7 @@ runs:
         echo "Detected changed shell files: ${{ inputs.changed_shell_files }}"
       shell: bash
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: "ShellCheck"
       uses: reviewdog/action-shellcheck@v1
