@@ -4,8 +4,10 @@ updates:
   - package-ecosystem: "github-actions"
     directories: 
       - "/"
-      - "/composite"
-      - "/go"
+      - "/composite/style/github_actions"
+      - "/composite/style/gofmt"
+      - "/composite/style/shell"
+      - "/composite/style/yaml"
       - "/setup-go"
     schedule:
       # Check for updates to GitHub Actions every week
