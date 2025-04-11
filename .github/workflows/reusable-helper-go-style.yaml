@@ -84,8 +84,7 @@ jobs:
         uses: golangci/golangci-lint-action@v7
         with:
           only-new-issues: true
-          version: v1.64.6
-          args: --go=1.24
+          version: v2.0
 
       - name: Install Tools
         if: ${{ always() }}
