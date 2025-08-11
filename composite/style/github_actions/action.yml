@@ -9,7 +9,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: reviewdog/action-actionlint@v1
       with:
         actionlint_flags: --shellcheck= ${{ inputs.changed_gha_yaml_files }}
