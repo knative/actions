@@ -18,8 +18,9 @@ on:
   workflow_call: {}
 
 jobs:
-
   verify:
+    permissions:
+      contents: read
     name: Verify Deps and Codegen
 
     runs-on: ubuntu-latest
@@ -37,6 +38,8 @@ jobs:
 
     - name: Update Codegen
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         [[ ! -f hack/update-codegen.sh ]] || ./hack/update-codegen.sh
 
