@@ -28,7 +28,7 @@ jobs:
         uses: knative/actions/setup-go@main
 
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Dependencies
         run: |
@@ -73,7 +73,7 @@ jobs:
         uses: knative/actions/setup-go@main
 
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - id: golangci_configuration
         uses: andstor/file-existence-action@v3
@@ -248,7 +248,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Do Not Submit
         shell: bash
@@ -306,7 +306,7 @@ jobs:
         uses: knative/actions/setup-go@main
 
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Tools
         run: |
