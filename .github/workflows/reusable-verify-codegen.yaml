@@ -34,7 +34,7 @@ jobs:
         go install github.com/google/go-licenses@latest
 
     - name: Check out code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Update Codegen
       shell: bash
