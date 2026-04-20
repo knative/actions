@@ -23,7 +23,7 @@ runs:
       shell: bash
       run: |
         go mod edit -replace ${{ env.UPSTREAM_MODULE }}=$GITHUB_WORKSPACE/${{ inputs.upstream-path }}
-        echo GO_LICENSES_FLAGS="--ignore ${{ env.UPSTREAM_MODULE }}" >> $GITHUB_ENV    
+        echo GO_LICENSES_FLAGS="${GO_LICENSES_FLAGS:-} --ignore ${{ env.UPSTREAM_MODULE }}" >> $GITHUB_ENV    
 
     - name: Downstream Update Deps
       working-directory: ${{ inputs.downstream-path }}
