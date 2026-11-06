@@ -30,13 +30,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Go
-        uses: knative/actions/setup-go@main
-
       - name: Check out code
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - name: Set up Go
+        uses: knative/actions/setup-go@main
 
       - name: Merge upstream
         if: github.event_name == 'pull_request'

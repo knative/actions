@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Go
-        uses: knative/actions/setup-go@main
-
       - name: Check out code
         uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: knative/actions/setup-go@main
 
       - id: go_mod
         uses: andstor/file-existence-action@v3
