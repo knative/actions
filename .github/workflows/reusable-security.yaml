@@ -26,15 +26,15 @@ jobs:
     name: Analyze CodeQL
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Go
-      uses: knative/actions/setup-go@main
-
     - name: Checkout repository
       uses: actions/checkout@v7
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
         fetch-depth: 2
+
+    - name: Set up Go
+      uses: knative/actions/setup-go@main
 
     - id: go_mod
       uses: andstor/file-existence-action@v3
@@ -90,13 +90,13 @@ jobs:
     env:
       GOPATH: ${{ github.workspace }}
     steps:
-      - name: Set up Go
-        uses: knative/actions/setup-go@main
-
       - name: Checkout
         uses: actions/checkout@v7
         with:
           path: ./src/github.com/${{ github.repository }}
+
+      - name: Set up Go
+        uses: knative/actions/setup-go@main
 
       - name: Govulncheck scan
         working-directory: ./src/github.com/${{ github.repository }}

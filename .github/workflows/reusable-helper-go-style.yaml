@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Go
-        uses: knative/actions/setup-go@main
-
       - name: Check out code
         uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: knative/actions/setup-go@main
 
       - name: Install Dependencies
         run: |
@@ -69,11 +69,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Go
-        uses: knative/actions/setup-go@main
-
       - name: Check out code
         uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: knative/actions/setup-go@main
 
       - id: golangci_configuration
         uses: andstor/file-existence-action@v3
@@ -302,11 +302,11 @@ jobs:
 
     steps:
 
-      - name: Set up Go
-        uses: knative/actions/setup-go@main
-
       - name: Check out code
         uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: knative/actions/setup-go@main
 
       - name: Install Tools
         run: |
