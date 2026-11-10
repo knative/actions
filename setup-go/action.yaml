@@ -20,3 +20,6 @@ runs:
       uses: actions/setup-go@v7
       with:
         go-version: ${{ inputs.go-version || '1.26' }}
+        # Use the newest patch release, not an older one that the runner
+        # image has cached.
+        check-latest: true
