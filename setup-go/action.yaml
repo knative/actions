@@ -12,6 +12,10 @@ inputs:
       override the go version defined by the Knative project
 
     required: false
+  cache:
+    description: Whether to cache Go modules and build outputs.
+    required: false
+    default: 'true'
   cache-dependency-path:
     description: |
       Dependency file paths or glob patterns used for the Go cache key.
@@ -28,4 +32,5 @@ runs:
         # Use the newest patch release, not an older one that the runner
         # image has cached.
         check-latest: true
+        cache: ${{ inputs.cache }}
         cache-dependency-path: ${{ inputs.cache-dependency-path }}
